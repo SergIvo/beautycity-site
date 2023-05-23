@@ -31,5 +31,6 @@ python3 manage.py runserver
 
 Доступны 3 переменные:
 - `DEBUG` — дебаг-режим. Поставьте `False`, чтобы отключить отладочный режим на production-сервере.
-- `SECRET_KEY` — секретный ключ проекта
-- `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
+- `SECRET_KEY` — секретный ключ проекта.
+- `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
+- `DATABASE_URL` — ссылка, содержащая данные для подключения к базе данных [по одной из перечисленных схем](https://github.com/jazzband/dj-database-url#url-schema).
