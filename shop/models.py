@@ -110,6 +110,12 @@ class Service(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), DecimalValidator(8, 2)]
     )
+    image = models.ImageField(
+        'фото услуги',
+        null=True,
+        blank=True,
+        upload_to='images/',
+    )
     time_in_minute = models.IntegerField()
 
     objects = ServiceQuerySet.as_manager()
