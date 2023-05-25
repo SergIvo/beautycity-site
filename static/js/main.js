@@ -1,4 +1,22 @@
 $(document).ready(function() {
+	// Обработчик для кнопки "Далее"
+  $(document).on('click', '.servicePage', function() {
+    const hasActiveTime = $('.time__items .time__elems_elem .time__elems_btn.active').length > 0;
+    const hasSelectedService = $('.service__form_block > button.selected').length > 0;
+
+    if (hasActiveTime && hasSelectedService) {
+      $('.time__btns_next').addClass('active');
+    } else {
+      $('.time__btns_next').removeClass('active');
+    }
+  });
+ // Обработчик клика на кнопках времени
+  $(document).on('click', '.time__elems_btn', function(e) {
+    e.preventDefault();
+    $('.time__elems_btn').removeClass('active');
+    $(this).addClass('active');
+  });
+
 	$('.salonsSlider').slick({
 		arrows: true,
 	  slidesToShow: 4,
@@ -9,7 +27,7 @@ $(document).ready(function() {
 	    {
 	      breakpoint: 991,
 	      settings: {
-	        
+
 	      	centerMode: true,
   			//centerPadding: '60px',
 	        slidesToShow: 2
@@ -32,7 +50,7 @@ $(document).ready(function() {
 	  	{
 	      breakpoint: 1199,
 	      settings: {
-	        
+
 
 	        slidesToShow: 3
 	      }
@@ -40,7 +58,7 @@ $(document).ready(function() {
 	    {
 	      breakpoint: 991,
 	      settings: {
-	        
+
 	      	centerMode: true,
   			//centerPadding: '60px',
 	        slidesToShow: 2
@@ -64,7 +82,7 @@ $(document).ready(function() {
 	  	{
 	      breakpoint: 1199,
 	      settings: {
-	        
+
 
 	        slidesToShow: 3
 	      }
@@ -72,7 +90,7 @@ $(document).ready(function() {
 	    {
 	      breakpoint: 991,
 	      settings: {
-	        
+
 
 	        slidesToShow: 2
 	      }
@@ -95,7 +113,7 @@ $(document).ready(function() {
 	  	{
 	      breakpoint: 1199,
 	      settings: {
-	        
+
 
 	        slidesToShow: 3
 	      }
@@ -103,7 +121,7 @@ $(document).ready(function() {
 	    {
 	      breakpoint: 991,
 	      settings: {
-	        
+
 
 	        slidesToShow: 2
 	      }
@@ -135,9 +153,9 @@ $(document).ready(function() {
 	  	e.preventDefault()
 	    this.classList.toggle("active");
 	    var panel = $(this).next()
-	    panel.hasClass('active') ?  
+	    panel.hasClass('active') ?
 	    	 panel.removeClass('active')
-	    	: 
+	    	:
 	    	 panel.addClass('active')
 	  });
 	}
@@ -148,8 +166,8 @@ $(document).ready(function() {
 
 		thisName = $(this).find('> .accordion__block_intro').text()
 		thisAddress = $(this).find('> .accordion__block_address').text()
-		
-		
+
+
 		if(thisName === 'BeautyCity Пушкинская') {
 			$('.service__masters > .panel').html(`
 				<div class="accordion__block fic">
@@ -205,7 +223,7 @@ $(document).ready(function() {
 		}
 		console.log(thisName)
 		if(thisName === 'BeautyCity Ленина') {
-			
+
 			$('.service__masters > .panel').html(`
 				<div class="accordion__block fic">
 						  	<div class="accordion__block_elems fic">
@@ -308,18 +326,18 @@ $(document).ready(function() {
 						  	<div class="accordion__block_prof">Визажист</div>
 						  </div>
 			`)
-			
+
 		}
 
 		$(this).parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
 		setTimeout(() => {
 			$(this).parent().parent().find('> button.active').click()
 		}, 200)
-		
+
 		// $(this).parent().addClass('hide')
 
 		// console.log($(this).parent().parent().find('.panel').hasClass('selected'))
-		
+
 		// $(this).parent().parent().find('.panel').addClass('selected')
 	})
 
@@ -366,7 +384,7 @@ $(document).ready(function() {
 
 	// })
 	// $('.accordion.selected').click(function() {
-	// 	$(this).parent().find('.panel').hasClass('selected') ? 
+	// 	$(this).parent().find('.panel').hasClass('selected') ?
 	// 	 $(this).parent().find('.panel').removeClass('selected')
 	// 		:
 	// 	$(this).parent().find('.panel').addClass('selected')
@@ -393,7 +411,7 @@ $(document).ready(function() {
 		e.preventDefault()
 		$('#tipsModal').arcticmodal();
 	})
-	
+
 	$('.authPopup__form').submit(function() {
 		$('#confirmModal').arcticmodal();
 		return false
@@ -412,7 +430,67 @@ $(document).ready(function() {
 			$('.time__btns_next').addClass('active')
 		}
 	})
-	
+
+// Получение элементов страницы
+const datepicker = document.getElementById('datepickerHere');
+const timeElems = document.querySelector('.time__elems');
+
+// Обработчик изменения выбранной даты
+datepicker.addEventListener('click', function(e) {
+  // Проверка, что клик был на ячейке с датой
+  if (e.target.classList.contains('air-datepicker-cell')) {
+    // Получение выбранной даты
+    const selectedDate = e.target.dataset.date;
+
+    // Отправка AJAX-запроса на сервер
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/get_free_time/?date=' + selectedDate, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Обработка ответа сервера
+        const response = JSON.parse(xhr.responseText);
+        displayFreeTime(response);
+      }
+    };
+    xhr.send();
+  }
+});
+
+function displayFreeTime(freeTimeList) {
+  // Очистка предыдущего списка времени
+  while (timeElems.firstChild) {
+    timeElems.firstChild.remove();
+  }
+
+  const timeIntervals = Object.keys(freeTimeList);
+
+  timeIntervals.forEach(function(interval) {
+    const timeItem = document.createElement('div');
+    timeItem.classList.add('time__items');
+
+    const timeIntro = document.createElement('div');
+    timeIntro.classList.add('time__elems_intro');
+    timeIntro.textContent = interval;
+    timeItem.appendChild(timeIntro);
+
+    const timeElem = document.createElement('div');
+    timeElem.classList.add('time__elems_elem', 'fic');
+
+    freeTimeList[interval].forEach(function(time) {
+      const button = document.createElement('button');
+      button.classList.add('time__elems_btn');
+      button.dataset.time = time;
+      button.textContent = time;
+      timeElem.appendChild(button);
+    });
+
+    timeItem.appendChild(timeElem);
+    timeElems.appendChild(timeItem);
+  });
+
+  // Вызов обработчика .servicePage
+  $('.servicePage').click();
+}
 
 
 })
