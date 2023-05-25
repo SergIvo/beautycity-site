@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Salon, Service, Master, Order
+from .models import Salon, Service, Master, Order, ServiceCategory
 
 
 def index(request):
@@ -34,7 +34,14 @@ def get_application(request):
 
 
 def make_order(request):
-    context = {}
+    salons = Salon.objects.all()
+    categories = ServiceCategory.objects.all()
+    for category in categories:
+        category.service_list = category.services.all()
+    context = {
+        'salons': salons,
+        'categories': categories
+    }
     return render(request, 'service.html', context)
 
 
