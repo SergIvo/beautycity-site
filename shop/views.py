@@ -8,9 +8,11 @@ from .models import Salon, Service, Master
 def index(request):
     salons = Salon.objects.all()
     services = Service.objects.all()
+    masters = Master.objects.all()
     context = {
         'salons': salons,
-        'services': services
+        'services': services,
+        'masters': masters,
     }
     return render(request, 'index.html', context)
 
