@@ -291,17 +291,20 @@ const timeElems = document.querySelector('.time__elems');
 
 // Обработчик изменения выбранной даты
 datepicker.addEventListener('click', function(e) {
-  // Проверка, что клик был на ячейке с датой
   if (e.target.classList.contains('air-datepicker-cell')) {
-    // Получение выбранной даты
-    const selectedDate = e.target.dataset.date;
+    const selectedDay = e.target.dataset.date;
+    const selectedYear = e.target.dataset.year;
+    const selectedMonth = e.target.dataset.month;
 
-    // Отправка AJAX-запроса на сервер
+    const selectedMasterElem = document.querySelector('.service__form_block.service__masters > .accordion.selected');
+	const selectedMasterId = selectedMasterElem && selectedMasterElem.firstElementChild ? selectedMasterElem.firstElementChild.getAttribute('master_id') : null;
+
+
+    // Отправка AJAX-запроса на сервер с датой, месяцем, годом и ID мастера
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/get_free_time/?date=' + selectedDate, true);
+    xhr.open('GET', '/get_free_time/?day=' + selectedDay + '&month=' + selectedMonth + '&year=' + selectedYear + '&master_id=' + selectedMasterId, true);
     xhr.onload = function() {
       if (xhr.status === 200) {
-        // Обработка ответа сервера
         const response = JSON.parse(xhr.responseText);
         displayFreeTime(response);
       }
@@ -309,6 +312,8 @@ datepicker.addEventListener('click', function(e) {
     xhr.send();
   }
 });
+
+
 
 function displayFreeTime(freeTimeList) {
   // Очистка предыдущего списка времени

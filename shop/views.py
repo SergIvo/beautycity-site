@@ -38,13 +38,22 @@ def confirm_order(request):
 
 def get_free_time(request):
     # Получение выбранной даты из параметров запроса
-    selected_date = request.GET.get('date')
-
-    free_time = {
-        'Утро': ['10:00', '10:30', '11:00', '11:30',],
-        'День': ['12:00', '12:30', ],
-        'Вечер': ['17:00', '18:00']
-    }
+    selected_day = request.GET.get('day')
+    selected_month = request.GET.get('month')
+    selected_year = request.GET.get('year')
+    selected_master_id = request.GET.get('master')
+    if selected_day == '1':
+        free_time = {
+            'Утро': ['10:00', ],
+            'День': ['12:00', ],
+            'Вечер': ['17:00',]
+        }
+    else:
+        free_time = {
+            'Утро': ['10:00', '10:30', '11:00', '11:30',],
+            'День': ['12:00', '12:30', ],
+            'Вечер': ['17:00', '18:00']
+        }
 
     return JsonResponse(free_time)
 
