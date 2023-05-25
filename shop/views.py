@@ -22,6 +22,10 @@ def get_review(request):
     return render(request, 'reviews.html', context)
 
 
+def get_application(request):
+    pass
+
+
 def make_order(request):
     context = {}
     return render(request, 'service.html', context)

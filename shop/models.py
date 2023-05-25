@@ -236,3 +236,31 @@ class Order(models.Model):
 
     def __str__(self):
         return self.client_firstname
+
+
+class Application(models.Model):
+    name = models.CharField(
+        'Имя клиента',
+        max_length=50
+    )
+    phonenumber = PhoneNumberField(
+        'Номер клиента',
+        db_index=True,
+    )
+    question = models.TextField(
+        'Вопрос клиента',
+    )
+    registered_at = models.DateTimeField(
+        'Время создания',
+        db_index=True,
+        default=timezone.now,
+    )
+    processed = models.BooleanField('Обработан', default=False)
+
+    class Meta:
+        ordering = ('-registered_at',)
+        verbose_name = 'Заявка на консультацию'
+        verbose_name_plural = 'Заявки на консультацию'
+
+    def __str__(self):
+        return f'{self.name}-{self.phonenumber}'

@@ -3,6 +3,7 @@ from .models import Service, ServiceCategory
 from .models import Salon
 from .models import Master, MasterServiceItem
 from .models import Order
+from .models import Application
 
 
 class MasterServiceItemInline(admin.TabularInline):
@@ -72,3 +73,22 @@ class Order(admin.ModelAdmin):
     search_fields = ('client_firstname', 'client_lastname', 'salon', 'master', 'client_phonenumber')
     list_display = ('client_firstname', 'client_lastname', 'payment', 'client_phonenumber')
     list_filter = ('client_phonenumber', 'payment')
+
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    search_fields = [
+        'name',
+        'phonenumber',
+    ]
+    list_display = [
+        'name',
+        'phonenumber',
+        'registered_at',
+        'processed',
+    ]
+    list_filter = [
+        'phonenumber',
+        'registered_at',
+        'processed',
+    ]
