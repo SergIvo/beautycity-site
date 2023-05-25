@@ -9,6 +9,8 @@ from rest_framework.response import Response
 
 from .models import Salon, Service, Master, Order
 
+from django.contrib.auth.decorators import user_passes_test
+
 
 def index(request):
     salons = Salon.objects.all()
@@ -31,6 +33,16 @@ def get_review(request):
 def get_application(request):
     print(request.data)
     return Response(request.data)
+
+
+def is_manager(user):
+    return user.is_staff
+
+
+@user_passes_test(is_manager, login_url='shop:index')
+def view_admin(request):
+    context = {}
+    return render(request, 'admin.html', context)
 
 
 def make_order(request):
