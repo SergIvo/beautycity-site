@@ -17,6 +17,11 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+def get_review(request):
+    context = {}
+    return render(request, 'reviews.html', context)
+
+
 def make_order(request):
     context = {}
     return render(request, 'service.html', context)
