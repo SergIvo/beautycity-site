@@ -4,6 +4,9 @@ from django.template.loader import render_to_string
 
 from .models import Salon, Service, Master
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 
 def index(request):
     salons = Salon.objects.all()
@@ -22,8 +25,10 @@ def get_review(request):
     return render(request, 'reviews.html', context)
 
 
+@api_view(['POST'])
 def get_application(request):
-    pass
+    print(request.data)
+    return Response(request.data)
 
 
 def make_order(request):

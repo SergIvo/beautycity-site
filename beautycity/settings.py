@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
 
     'phonenumber_field',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

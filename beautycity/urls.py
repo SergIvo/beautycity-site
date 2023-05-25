@@ -13,5 +13,7 @@ urlpatterns = [
     path('get_free_time/', views.get_free_time, name='get_free_time'),
     path('reviews/', views.get_review, name='reviews'),
     path('get_masters/', views.get_masters, name='get_masters'),
+
+    path('api/application/', views.get_application),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
