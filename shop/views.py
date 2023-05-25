@@ -65,8 +65,6 @@ def get_free_time(request):
             Q(registered_at__day=selected_day),
         )
 
-        print(f"Found orders: {orders}")
-
         # удаляем занятые временные слоты
         for order in orders:
             if order.registered_at.time() in time_slots:
