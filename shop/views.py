@@ -1,7 +1,8 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
-from .models import Salon, Service
+from .models import Salon, Service, Master
 
 
 def index(request):
@@ -35,3 +36,15 @@ def get_free_time(request):
     }
 
     return JsonResponse(free_time)
+
+
+def get_masters(request):
+    address = request.GET.get('address')
+    if address:
+        salon = Salon.objects.get(address=address)
+        masters = list(salon.masters.all())
+        rendered = render_to_string('masters_list.html', {'masters': masters})
+        html_response = HttpResponse(rendered)
+    else:
+        html_response = HttpResponse()
+    return html_response
