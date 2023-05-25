@@ -25,6 +25,11 @@ class Salon(models.Model):
         max_length=50,
         blank=True,
     )
+    schedule = models.CharField(
+        'график работы',
+        max_length=50,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = 'салон'
@@ -52,6 +57,17 @@ class Master(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+    )
+    image = models.ImageField(
+        'фото мастера',
+        null=True,
+        blank=True,
+        upload_to='images/',
+    )
+    specialization = models.CharField(
+        'специализация',
+        max_length=200,
+        blank=True,
     )
 
     class Meta:
