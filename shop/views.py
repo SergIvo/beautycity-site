@@ -1,11 +1,13 @@
+from datetime import datetime, timedelta
+
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-
-from .models import Salon, Service, Master
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from .models import Salon, Service, Master, Order
 
 
 def index(request):
@@ -42,23 +44,39 @@ def confirm_order(request):
 
 
 def get_free_time(request):
-    # Получение выбранной даты из параметров запроса
-    selected_day = request.GET.get('day')
-    selected_month = request.GET.get('month')
-    selected_year = request.GET.get('year')
-    selected_master_id = request.GET.get('master')
-    if selected_day == '1':
-        free_time = {
-            'Утро': ['10:00', ],
-            'День': ['12:00', ],
-            'Вечер': ['17:00',]
-        }
-    else:
-        free_time = {
-            'Утро': ['10:00', '10:30', '11:00', '11:30',],
-            'День': ['12:00', '12:30', ],
-            'Вечер': ['17:00', '18:00']
-        }
+    selected_day = int(request.GET.get('day'))
+    selected_month = int(request.GET.get('month'))+1
+    selected_year = int(request.GET.get('year'))
+    selected_master_id = request.GET.get('master_id')
+    selected_date = datetime(selected_year, selected_month, selected_day)
+
+    # список всех возможных временных слотов
+    time_slots = [
+        (datetime.combine(selected_date, datetime.min.time()) + timedelta(hours=10, minutes=30 * i)).time()
+        for i in range(20)  # 20 полу-часовых слотов с 10:00 до 20:00
+    ]
+    # если выбран мастер
+    if selected_master_id != 'null':
+        # получаем заказы мастера на эту дату
+        orders = Order.objects.filter(
+            Q(master__id=selected_master_id),
+            Q(registered_at__year=selected_year),
+            Q(registered_at__month=selected_month),
+            Q(registered_at__day=selected_day),
+        )
+
+        print(f"Found orders: {orders}")
+
+        # удаляем занятые временные слоты
+        for order in orders:
+            if order.registered_at.time() in time_slots:
+                time_slots.remove(order.registered_at.time())
+
+    free_time = {
+        'Утро': [ts.strftime('%H:%M') for ts in time_slots if 10 <= ts.hour < 12],
+        'День': [ts.strftime('%H:%M') for ts in time_slots if 12 <= ts.hour < 17],
+        'Вечер': [ts.strftime('%H:%M') for ts in time_slots if 17 <= ts.hour < 20],
+    }
 
     return JsonResponse(free_time)
 

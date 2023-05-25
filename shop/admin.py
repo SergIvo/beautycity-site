@@ -18,6 +18,7 @@ class MasterAdmin(admin.ModelAdmin):
         'master_lastname',
     ]
     list_display = [
+        'id',
         'master_firstname',
         'master_lastname',
     ]
