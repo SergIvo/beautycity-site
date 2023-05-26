@@ -181,9 +181,12 @@ $(document).ready(function() {
             console.log('Error')
             }
         });
+        console.log($(this).attr('bd_id'))
 
 
 		$(this).parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
+		$(this).parent().parent().attr('selected_id', '')
+		$(this).parent().parent().attr('selected_id', $(this).attr('bd_id'))
 		setTimeout(() => {
 			$(this).parent().parent().find('> button.active').click()
 		}, 200)
@@ -206,6 +209,8 @@ $(document).ready(function() {
 		setTimeout(() => {
 			$(this).parent().parent().parent().parent().find('> button.active').click()
 		}, 200)
+		$(this).parent().parent().parent().parent().attr('selected_id', $(this).attr('bd_id'))
+		console.log($(this).attr('bd_id'))
 	})
 
 
