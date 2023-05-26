@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from .serializers import ApplicationSerializer
 
 from .models import Salon, Service, Master, Order, ServiceCategory
@@ -14,6 +13,7 @@ from .models import Salon, Service, Master, Order, ServiceCategory
 from django.contrib.auth.decorators import user_passes_test
 
 
+@api_view(['POST', 'GET'])
 def index(request):
     salons = Salon.objects.all()
     services = Service.objects.all()
@@ -23,22 +23,21 @@ def index(request):
         'services': services,
         'masters': masters,
     }
+    if request.method == 'POST':
+        serializer = ApplicationSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            serializer.save()
+            return render(request, 'success_application.html')
+        else:
+            context['serializer'] = serializer
+            return render(request, 'index.html', context)
+
     return render(request, 'index.html', context)
 
 
 def get_review(request):
     context = {}
     return render(request, 'reviews.html', context)
-
-
-@api_view(['POST'])
-def get_application(request):
-    serializer = ApplicationSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    serializer.save()
-
-    return render(request, 'success_application.html')
 
 
 def is_manager(user):
