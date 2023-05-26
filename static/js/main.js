@@ -367,11 +367,11 @@ const nextButton = document.querySelector('.time__btns_next');
 
 // Обработчик события click для кнопки "Далее"
 nextButton.addEventListener('click', function(e) {
-  // Предотвращение стандартного действия кнопки
-  e.preventDefault();
+
+// Предотвращение стандартного действия кнопки
+e.preventDefault();
 
 // Сбор данных для отправки
-
 const selectedTimeElem = document.querySelector('.time__elems_elem .time__elems_btn.active');
 const selectedTime = selectedTimeElem ? selectedTimeElem.dataset.time : null;
 console.log('selectedTime:', selectedTime);
@@ -388,42 +388,26 @@ const selectedSalonElem = document.querySelector('.service__form_block.service__
 const selectedSalonId = selectedSalonElem ? selectedSalonElem.getAttribute('selected_id') : null;
 console.log('selectedSalonId:', selectedSalonId);
 
-// Проверка, что все данные были получены
-if (selectedDay && selectedMonth && selectedYear && selectedTime && selectedMasterId && selectedServiceId && selectedSalonId) {
-  const data = {
-    day: selectedDay,
-    month: selectedMonth,
-    year: selectedYear,
-    time: selectedTime,
-    master_id: selectedMasterId,
-    service_id: selectedServiceId,
-    salon_id: selectedSalonId
-  };
+	// Проверка, что все данные были получены
+    if (selectedDay && selectedMonth && selectedYear && selectedTime && selectedMasterId && selectedServiceId && selectedSalonId) {
+        const data = {
+            day: selectedDay,
+            month: selectedMonth,
+            year: selectedYear,
+            time: selectedTime,
+            master_id: selectedMasterId,
+            service_id: selectedServiceId,
+            salon_id: selectedSalonId
+        };
 
-  // Отправка POST-запроса на сервер
-  fetch('/pre_order/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  }).then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+        // Формируем строку параметров
+        const params = new URLSearchParams(data).toString();
+
+        // Перенаправляем пользователя на новую страницу с параметрами
+        window.location.href = '/pre_order/?' + params;
+    } else {
+        console.error('Не все данные были выбраны.');
     }
-    return response.json();
-  }).then(data => {
-    // Обработка ответа от сервера
-    console.log('Success:', data);
-  }).catch(error => {
-    // Обработка ошибок сети
-    console.error('Error:', error);
-  });
-} else {
-  console.error('Не все данные были выбраны.');
-}
 });
-
-
 
 })
