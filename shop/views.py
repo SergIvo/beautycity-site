@@ -63,11 +63,6 @@ def make_order(request):
     return render(request, 'service.html', context)
 
 
-def confirm_order(request):
-    context = {}
-    return render(request, 'service_finally.html', context)
-
-
 def get_free_time(request):
     selected_day = int(request.GET.get('day'))
     selected_month = int(request.GET.get('month'))
@@ -139,14 +134,40 @@ def pre_order(request):
         'salon_id': salon_id,
         'service_id': service_id,
         'master_id': master_id,
-        'datetime_order': datetime_order,
+        'datetime_order': datetime_str,
     }
 
     return render(request, 'service_finally.html', context)
 
 
 def order(request):
-    return render(request, 'order_finally.html')
+    print(request.POST.dict())
+    master_id = request.POST.get('master_id')
+    service_id = request.POST.get('service_id')
+    salon_id = request.POST.get('salon_id')
+    service=Service.objects.get(id=service_id)
+    time = datetime.strptime(request.POST.get('datetime_order'), "%Y-%m-%d %H:%M")
+    
+    new_order = Order(
+        salon=Salon.objects.get(id=salon_id),
+        master=Master.objects.get(id=master_id),
+        service=service,
+        registered_at=time,
+        client_firstname=request.POST.get('fname'),
+        client_phonenumber=request.POST.get('tel'),
+        client_comment=request.POST.get('contactsTextarea'),
+        price=service.price
+    )
+    new_order.save()
+    context = {
+        'order': new_order,
+        'time': time.strftime('%H:%M'),
+        'year': time.year,
+        'month': time.month,
+        'day': time.day
+    }
+    
+    return render(request, 'order_finally.html', context)
 
 
 def get_masters(request):
