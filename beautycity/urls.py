@@ -14,7 +14,7 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('reviews/', views.get_review, name='reviews'),
     path('get_masters/', views.get_masters, name='get_masters'),
-    path('api/application/', views.get_application),
     path('manager/admin/', views.view_admin, name="admin"),
+    path('confidential/', views.get_confidential, name='confidential'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

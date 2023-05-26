@@ -241,15 +241,23 @@
 				<div class="title contacts__title">Контакты</div>
 				<div class="row">
 					<div class="col-md-12 col-lg-4 col-xl-3">
-						<form method="POST" action="api/application/" class="contacts__form">{% csrf_token %}
+						<form method="POST" action="#" class="contacts__form">{% csrf_token %}
 							<div class="contacts__form_title">Оставьте заявку на консультацию</div>
 							<div class="contacts__form_block">
+								{% if serializer.name.errors %}
+								  <p style="color:#ff0000">Проверьте имя</p>
+								{% endif %}
 								<input type="text" name="name" class="contacts__form_iunput" placeholder="Введите имя" required>
 								<div class="contacts__form_inputBlock">
+									{% if serializer.phonenumber.errors %}
+									  <p style="color:#ff0000">Проверьте номер телефона +7...</p>
+									{% endif %}
 									<input type="text" name="phonenumber" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
 								</div>
 							</div>
-							
+							{% if serializer.question.errors %}
+							  <p style="color:#ff0000">Проверьте обращение</p>
+							{% endif %}
 							<textarea name="question" class="contacts__form_textarea" placeholder="Вопрос(необязательно)"></textarea>
 							<div class="contacts__form_checkboxBlock fic">
 								<input type="checkbox" class="contacts__form_checkbox" checked>
