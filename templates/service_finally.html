@@ -12,11 +12,12 @@
 						<div class="service__block">
 							<h1 class="service__title">Запись на услугу</h1>
 						</div>
-						<form action="#" class="serviceFinally__form">
-                              <input type="hidden" name="salon_id" value="{{ salon_id }}">
-                              <input type="hidden" name="service_id" value="{{ service_id }}">
-                              <input type="hidden" name="master_id" value="{{ master_id }}">
-                              <input type="hidden" name="datetime_order" value="{{ datetime_order }}">
+						<form action="/order/" method="post" class="serviceFinally__form">
+                            {% csrf_token %}
+                            <input type="hidden" name="salon_id" value="{{ salon_id }}">
+                            <input type="hidden" name="service_id" value="{{ service_id }}">
+                            <input type="hidden" name="master_id" value="{{ master_id }}">
+                            <input type="hidden" name="datetime_order" value="{{ datetime_order }}">
 							<div class="serviceFinally__form_block">
 								<div class="serviceFinally__form_header fic">
 									<span class="serviceFinally__form_header__number">Запись №{{ order_number }}</span>
