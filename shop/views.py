@@ -4,8 +4,10 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .serializers import ApplicationSerializer
 
 from .models import Salon, Service, Master, Order, ServiceCategory
 
@@ -31,8 +33,12 @@ def get_review(request):
 
 @api_view(['POST'])
 def get_application(request):
-    print(request.data)
-    return Response(request.data)
+    serializer = ApplicationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    serializer.save()
+
+    return render(request, 'success_application.html')
 
 
 def is_manager(user):
