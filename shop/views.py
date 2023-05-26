@@ -70,7 +70,7 @@ def confirm_order(request):
 
 def get_free_time(request):
     selected_day = int(request.GET.get('day'))
-    selected_month = int(request.GET.get('month'))+1
+    selected_month = int(request.GET.get('month'))
     selected_year = int(request.GET.get('year'))
     selected_master_id = request.GET.get('master_id')
     selected_date = datetime(selected_year, selected_month, selected_day)
@@ -102,6 +102,10 @@ def get_free_time(request):
     }
 
     return JsonResponse(free_time)
+
+
+def pre_order(request):
+    pass
 
 
 def get_masters(request):

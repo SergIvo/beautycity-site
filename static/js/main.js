@@ -294,16 +294,22 @@ $(document).ready(function() {
 const datepicker = document.getElementById('datepickerHere');
 const timeElems = document.querySelector('.time__elems');
 
+
 // Обработчик изменения выбранной даты
-datepicker.addEventListener('click', function(e) {
-  if (e.target.classList.contains('air-datepicker-cell')) {
-    const selectedDay = e.target.dataset.date;
-    const selectedYear = e.target.dataset.year;
-    const selectedMonth = e.target.dataset.month;
+let selectedMasterId, selectedDay, selectedMonth, selectedYear;
+
 
     const selectedMasterElem = document.querySelector('.service__form_block.service__masters > .accordion.selected');
-	const selectedMasterId = selectedMasterElem && selectedMasterElem.firstElementChild ? selectedMasterElem.firstElementChild.getAttribute('master_id') : null;
+	selectedMasterId = selectedMasterElem && selectedMasterElem.firstElementChild ? selectedMasterElem.firstElementChild.getAttribute('bd_id') : null;
 
+datepicker.addEventListener('click', function(e) {
+  if (e.target.classList.contains('air-datepicker-cell')) {
+    selectedDay = e.target.dataset.date;
+    selectedYear = e.target.dataset.year;
+    selectedMonth = (parseInt(e.target.dataset.month) + 1).toString();
+
+    const selectedMasterElem = document.querySelector('.service__form_block.service__masters > .accordion.selected');
+    selectedMasterId = selectedMasterElem && selectedMasterElem.firstElementChild ? selectedMasterElem.firstElementChild.getAttribute('bd_id') : null;
 
     // Отправка AJAX-запроса на сервер с датой, месяцем, годом и ID мастера
     const xhr = new XMLHttpRequest();
@@ -355,6 +361,69 @@ function displayFreeTime(freeTimeList) {
   // Вызов обработчика .servicePage
   $('.servicePage').click();
 }
+
+// Получение элемента кнопки
+const nextButton = document.querySelector('.time__btns_next');
+
+// Обработчик события click для кнопки "Далее"
+nextButton.addEventListener('click', function(e) {
+  // Предотвращение стандартного действия кнопки
+  e.preventDefault();
+
+// Сбор данных для отправки
+
+const selectedTimeElem = document.querySelector('.time__elems_elem .time__elems_btn.active');
+const selectedTime = selectedTimeElem ? selectedTimeElem.dataset.time : null;
+console.log('selectedTime:', selectedTime);
+
+const selectedMasterElem = document.querySelector('.service__form_block.service__masters');
+const selectedMasterId = selectedMasterElem ? selectedMasterElem.getAttribute('selected_id') : null;
+console.log('selectedMasterId:', selectedMasterId);
+
+const selectedServiceElem = document.querySelector('.service__form_block.service__services');
+const selectedServiceId = selectedServiceElem ? selectedServiceElem.getAttribute('selected_id') : null;
+console.log('selectedServiceId:', selectedServiceId);
+
+const selectedSalonElem = document.querySelector('.service__form_block.service__salons');
+const selectedSalonId = selectedSalonElem ? selectedSalonElem.getAttribute('selected_id') : null;
+console.log('selectedSalonId:', selectedSalonId);
+
+// Проверка, что все данные были получены
+if (selectedDay && selectedMonth && selectedYear && selectedTime && selectedMasterId && selectedServiceId && selectedSalonId) {
+  const data = {
+    day: selectedDay,
+    month: selectedMonth,
+    year: selectedYear,
+    time: selectedTime,
+    master_id: selectedMasterId,
+    service_id: selectedServiceId,
+    salon_id: selectedSalonId
+  };
+
+  // Отправка POST-запроса на сервер
+  fetch('/pre_order/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }).then(data => {
+    // Обработка ответа от сервера
+    console.log('Success:', data);
+  }).catch(error => {
+    // Обработка ошибок сети
+    console.error('Error:', error);
+  });
+} else {
+  console.error('Не все данные были выбраны.');
+}
+});
+
 
 
 })
