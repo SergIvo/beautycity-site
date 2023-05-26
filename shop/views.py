@@ -109,6 +109,9 @@ def pre_order(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
     time = request.GET.get('time')
+    datetime_str = f"{year}-{month}-{day} {time}"
+    datetime_order = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+
     master_id = request.GET.get('master_id')
     service_id = request.GET.get('service_id')
     salon_id = request.GET.get('salon_id')
@@ -133,9 +136,17 @@ def pre_order(request):
         'service': service,
         'salon': salon,
         'order_number': order_number,
+        'salon_id': salon_id,
+        'service_id': service_id,
+        'master_id': master_id,
+        'datetime_order': datetime_order,
     }
 
     return render(request, 'service_finally.html', context)
+
+
+def order(request):
+    return render(request, 'order_finally.html')
 
 
 def get_masters(request):
