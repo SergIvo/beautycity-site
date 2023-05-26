@@ -5,14 +5,14 @@
 		<div class="container">
 			<div class="service">
 				<div class="breadCrumbs">
-					<a href="#" class="breadCrumbs__item">На главную</a>
+					<a href="{% url 'index' %}" class="breadCrumbs__item">На главную</a>
 				</div>
 				<div class="service__block">
 					<h1 class="service__title">Запись на услугу</h1>
 					<button class="service__btn btn">Запись по телефону</button>
 				</div>
 				
-				<form action="#" class="service__form">
+				<form action="{% url 'index' %}" class="service__form">
 					<!-- <select name="selectSalon" id="" class="service__form_select">
 						<option value="" selected>(Выберите салон)</option>
 						<option value="salon1" >Салон 1</option>
@@ -111,7 +111,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<button  class="time__btns_next">Далее</button>
-							<button  class="time__btns_home">На главную</button>
+							<a href="{% url 'index' %}"><button  class="time__btns_home">На главную</button><a>
 						</div>
 					</div>
 				</div>
