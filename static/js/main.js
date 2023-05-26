@@ -306,7 +306,7 @@ datepicker.addEventListener('click', function(e) {
   if (e.target.classList.contains('air-datepicker-cell')) {
     selectedDay = e.target.dataset.date;
     selectedYear = e.target.dataset.year;
-    selectedMonth = e.target.dataset.month;
+    selectedMonth = (parseInt(e.target.dataset.month) + 1).toString();
 
     const selectedMasterElem = document.querySelector('.service__form_block.service__masters > .accordion.selected');
     selectedMasterId = selectedMasterElem && selectedMasterElem.firstElementChild ? selectedMasterElem.firstElementChild.getAttribute('bd_id') : null;
