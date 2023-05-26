@@ -105,7 +105,37 @@ def get_free_time(request):
 
 
 def pre_order(request):
-    pass
+    day = request.GET.get('day')
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+    time = request.GET.get('time')
+    master_id = request.GET.get('master_id')
+    service_id = request.GET.get('service_id')
+    salon_id = request.GET.get('salon_id')
+
+    master = Master.objects.get(id=master_id)
+    service = Service.objects.get(id=service_id)
+    salon = Salon.objects.get(id=salon_id)
+
+    order_number = Order.objects.all().order_by('-id').first()
+
+    if order_number is not None:
+        order_number = order_number.id + 1
+    else:
+        order_number = 1
+
+    context = {
+        'day': day,
+        'month': month,
+        'year': year,
+        'time': time,
+        'master': master,
+        'service': service,
+        'salon': salon,
+        'order_number': order_number,
+    }
+
+    return render(request, 'service_finally.html', context)
 
 
 def get_masters(request):
