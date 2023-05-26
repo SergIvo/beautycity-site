@@ -50,6 +50,11 @@ def view_admin(request):
     return render(request, 'admin.html', context)
 
 
+def get_confidential(request):
+    context = {}
+    return render(request, 'confidential.html', context)
+
+
 def make_order(request):
     salons = Salon.objects.all()
     categories = ServiceCategory.objects.all()
