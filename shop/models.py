@@ -264,3 +264,51 @@ class Application(models.Model):
 
     def __str__(self):
         return f'{self.name}-{self.phonenumber}'
+
+
+class Review(models.Model):
+    name = models.CharField(
+        'Имя клиента',
+        max_length=50
+    )
+    phonenumber = PhoneNumberField(
+        'Номер клиента',
+        db_index=True,
+    )
+    salon = models.ForeignKey(
+        Salon,
+        verbose_name='Салон, на который оставили отзыв',
+        related_name='reviews',
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+    master = models.ForeignKey(
+        Master,
+        verbose_name='Мастер, на которого оставили отзыв',
+        related_name='reviews',
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+    score = models.IntegerField(
+        'Количество баллов салона',
+        blank=True,
+        db_index=True)
+    registered_at = models.DateTimeField(
+        'Время отзыва',
+        db_index=True,
+        default=timezone.now,
+    )
+    visited_at = models.DateTimeField(
+        'Дата посещения салона',
+        db_index=True,
+        default=timezone.now,
+    )
+    text = models.TextField('Текст отзыва', blank=True)
+
+    class Meta:
+        ordering = ('-registered_at',)
+        verbose_name = 'Отзыв на салон'
+        verbose_name_plural = 'Отзывы на салон'
+
+    def __str__(self):
+        return f' жалоба на {self.salon__address}'

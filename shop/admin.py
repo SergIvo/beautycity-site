@@ -3,7 +3,7 @@ from .models import Service, ServiceCategory
 from .models import Salon
 from .models import Master, MasterServiceItem
 from .models import Order
-from .models import Application
+from .models import Application, Review
 
 
 class MasterServiceItemInline(admin.TabularInline):
@@ -92,4 +92,26 @@ class ApplicationAdmin(admin.ModelAdmin):
         'phonenumber',
         'registered_at',
         'processed',
+    ]
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    search_fields = [
+        'name',
+        'phonenumber',
+        'salon',
+    ]
+    list_display = [
+        'name',
+        'phonenumber',
+        'registered_at',
+        'salon',
+    ]
+    list_filter = [
+        'phonenumber',
+        'registered_at',
+        'salon',
+        'master',
+        'visited_at',
     ]
