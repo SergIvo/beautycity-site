@@ -280,6 +280,7 @@ class Review(models.Model):
         verbose_name='Салон, на который оставили отзыв',
         related_name='reviews',
         blank=True,
+        null=True,
         on_delete=models.CASCADE,
     )
     master = models.ForeignKey(
@@ -287,6 +288,7 @@ class Review(models.Model):
         verbose_name='Мастер, на которого оставили отзыв',
         related_name='reviews',
         blank=True,
+        null=True,
         on_delete=models.CASCADE,
     )
     score = models.IntegerField(
@@ -311,4 +313,4 @@ class Review(models.Model):
         verbose_name_plural = 'Отзывы на салон'
 
     def __str__(self):
-        return f' жалоба на {self.salon__address}'
+        return f' отзыв от клиента {self.name}'

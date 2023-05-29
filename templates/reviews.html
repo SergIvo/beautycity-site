@@ -1,16 +1,82 @@
 {% extends 'base.html' %}
+{% block title %}Reviews{% endblock %}
+{% block style %}
+.rating-area {
+	overflow: hidden;
+	width: 265px;
+	margin: 0 auto;
+}
+.rating-area:not(:checked) > input {
+	display: none;
+}
+.rating-area:not(:checked) > label {
+	float: right;
+	width: 42px;
+	padding: 0;
+	cursor: pointer;
+	font-size: 32px;
+	line-height: 32px;
+	color: lightgrey;
+	text-shadow: 1px 1px #bbb;
+}
+.rating-area:not(:checked) > label:before {
+	content: '★';
+}
+.rating-area > input:checked ~ label {
+	color: gold;
+	text-shadow: 1px 1px #c60;
+}
+.rating-area:not(:checked) > label:hover,
+.rating-area:not(:checked) > label:hover ~ label {
+	color: gold;
+}
+.rating-area > input:checked + label:hover,
+.rating-area > input:checked + label:hover ~ label,
+.rating-area > input:checked ~ label:hover,
+.rating-area > input:checked ~ label:hover ~ label,
+.rating-area > label:hover ~ input:checked ~ label {
+	color: gold;
+	text-shadow: 1px 1px goldenrod;
+}
+.rate-area > label:active {
+	position: relative;
+}
+{% endblock %}
 {% load static %}
 {% block content %}
 
 <div class="reviewPopup popup">
 		<div class="popup__title reviewPopup__title">Отзыв</div>
-		<form action="#" class="reviewPopup__form">
-			<input type="text" name="fname" class="paymentPopup__form_input popup__input" placeholder="Введите имя" required>
+		<form method="POST" action="#" class="reviewPopup__form">{% csrf_token %}
+			<input type="text" name="name" class="paymentPopup__form_input popup__input" placeholder="Введите имя" required>
 			<div class="contacts__form_inputBlock">
-				<input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
+				<input type="text" name="phonenumber" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
 			</div>
-			<input type="text" name="dateVis" class="paymentPopup__form_input popup__input" placeholder="Дата посещения" required>
-			<textarea name="popupTextarea" class="reviewPopup__form_textarea" placeholder="Текст отзыва"></textarea>
+			<input required="" type="text" name="visited_at" class="paymentPopup__form_input popup__input" placeholder="Дата посещения" onfocus="(this.type='date')"/>
+			<textarea name="text" class="reviewPopup__form_textarea" placeholder="Текст отзыва"></textarea>
+			<div class="rating-area">
+
+				<input type="radio" id="star-5" name="score" value="5">
+
+				<label for="star-5" title="Оценка «5»"></label>
+
+				<input type="radio" id="star-4" name="score" value="4">
+
+				<label for="star-4" title="Оценка «4»"></label>
+
+				<input type="radio" id="star-3" name="score" value="3">
+
+				<label for="star-3" title="Оценка «3»"></label>
+
+				<input type="radio" id="star-2" name="score" value="2">
+
+				<label for="star-2" title="Оценка «2»"></label>
+
+				<input type="radio" id="star-1" name="score" value="1">
+
+				<label for="star-1" title="Оценка «1»"></label>
+
+			</div>
 			<div class="contacts__form_checkboxBlock fic">
 				<input type="checkbox" class="contacts__form_checkbox" checked>
 				<span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециоальности</span>

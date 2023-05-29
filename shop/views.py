@@ -6,9 +6,9 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from rest_framework.decorators import api_view
-from .serializers import ApplicationSerializer
+from .serializers import ApplicationSerializer, ReviewSerializer
 
-from .models import Salon, Service, Master, Order, ServiceCategory
+from .models import Salon, Service, Master, Order, ServiceCategory, Review
 
 from django.contrib.auth.decorators import user_passes_test
 
@@ -18,10 +18,12 @@ def index(request):
     salons = Salon.objects.all()
     services = Service.objects.all()
     masters = Master.objects.all()
+    reviews = Review.objects.all()
     context = {
         'salons': salons,
         'services': services,
         'masters': masters,
+        'reviews': reviews,
     }
     if request.method == 'POST':
         serializer = ApplicationSerializer(data=request.data)
@@ -35,8 +37,17 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+@api_view(['POST', 'GET'])
 def get_review(request):
     context = {}
+    if request.method == 'POST':
+        print(request.data)
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            serializer.save()
+            return render(request, 'success_review.html')
+        else:
+            return render(request, 'reviews.html', context)
     return render(request, 'reviews.html', context)
 
 
