@@ -42,7 +42,6 @@ def index(request):
 def get_review(request):
     context = {}
     if request.method == 'POST':
-        print(request.data)
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=False):
             serializer.save()
