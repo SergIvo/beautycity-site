@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -24,6 +24,7 @@ def index(request):
         'services': services,
         'masters': masters,
         'reviews': reviews,
+        'user_authorised': request.user.is_authenticated,
     }
     if request.method == 'POST':
         serializer = ApplicationSerializer(data=request.data)
@@ -55,9 +56,17 @@ def is_manager(user):
     return user.is_staff
 
 
-@user_passes_test(is_manager, login_url='shop:index')
+@user_passes_test(is_manager, login_url='index')
 def view_admin(request):
-    context = {}
+    total_payment_orders = Order.objects.filter(payment=True).count()
+    total_orders = Order.objects.count()
+    costs = Order.objects.filter(payment=True).aggregate(totals=Sum('price')).get('totals')
+    context = {
+        'user_authorised': request.user.is_authenticated,
+        'total_payment_orders': total_payment_orders,
+        'total_orders': total_orders,
+        'costs': costs,
+    }
     return render(request, 'admin.html', context)
 
 
